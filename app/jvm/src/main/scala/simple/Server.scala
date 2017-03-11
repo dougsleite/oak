@@ -4,7 +4,9 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.directives.FileAndResourceDirectives.getFromResourceDirectory
 import akka.stream.ActorMaterializer
+import service.MongoQueryParser
 import service.MongoService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -12,7 +14,7 @@ import scala.util.Properties
 
 object Server {
 
-  val mongoService = new MongoService()
+  val mongoService = new MongoService(new MongoQueryParser())
 
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem()

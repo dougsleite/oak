@@ -17,7 +17,10 @@ val app = crossProject.settings(
   libraryDependencies ++= Seq(
     "com.typesafe.akka" %% "akka-http-experimental" % "2.4.11",
     "com.typesafe.akka" %% "akka-actor" % "2.4.12",
-    "org.webjars" % "bootstrap" % "3.2.0"
+    "org.webjars" % "bootstrap" % "3.2.0",
+    "org.json4s" %% "json4s-native" % "3.3.0",
+    "org.scalactic" %% "scalactic" % "3.0.1",
+    "org.scalatest" %% "scalatest" % "3.0.1" % "test"
   )
 )
 
