@@ -29,7 +29,7 @@ object Client extends {
     }
 
     inputBox.onkeyup = (e: dom.KeyboardEvent) => if (e.keyCode == KeyCode.Enter) update()
-    inputBox.size = 100
+    inputBox.size = 200
 
     update()
 

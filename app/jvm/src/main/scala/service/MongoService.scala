@@ -17,18 +17,23 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-class MongoService(mongoQueryParser: MongoQueryParser) {
+private object MongoService {
+  val TIMEOUT = Duration(30, SECONDS)
 
   // You will only need one instance of class MongoClient even with multiple concurrently executing asynchronous operations.
-  val mongoClient: MongoClient = MongoClient("mongodb://localhost")
-  val database: MongoDatabase = mongoClient.getDatabase("vm")
-  val collection: MongoCollection[Document] = database.getCollection("letters")
+  val MONGO_CLI: MongoClient = MongoClient("mongodb://localhost")
+  val MONGO_DB: MongoDatabase = MONGO_CLI.getDatabase("vm")
+  val MONGO_COLLECTION: MongoCollection[Document] = MONGO_DB.getCollection("letters")
+}
+
+class MongoService(mongoQueryParser: MongoQueryParser) {
 
   def executeQuery(query: String): Seq[String] = Try {
-    val result: Future[Document] = collection.find(mongoQueryParser.parse(query)).first().head()
-    List(Await.result(result, Duration(30, SECONDS)).toJson(new JsonWriterSettings(JsonMode.STRICT, true)))
+    val result2: Future[Seq[Document]] = MongoService.MONGO_COLLECTION.find(mongoQueryParser.parse(query)).toFuture()
+    Await.result(result2, atMost = MongoService.TIMEOUT).map(doc => doc.toJson(new JsonWriterSettings(JsonMode.STRICT, true))).toList
   } match {
     case Success(value) => value
     case Failure(f) => List()
   }
+
 }
