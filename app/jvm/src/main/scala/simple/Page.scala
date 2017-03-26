@@ -11,7 +11,7 @@ object Page {
         script(src := "/app-fastopt.js"),
         link(
           rel := "stylesheet",
-          href := "https://cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css"
+          href := "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css"
         )
       ),
       body(

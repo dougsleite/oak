@@ -16,20 +16,20 @@ object Client extends {
   def main(container: html.Div): Node = {
 
     val inputBox = input.render
-    val outputBox = ul.render
+    val outputBox = div.render
 
     def update() = Ajax.post("/mongo/data", inputBox.value).foreach { xhr =>
       val data = upickle.default.read[Seq[String]](xhr.responseText)
       outputBox.innerHTML = ""
       for (entry <- data) {
         outputBox.appendChild(
-          li(b(entry)).render
+          div(pre(entry)).render
         )
       }
     }
 
     inputBox.onkeyup = (e: dom.KeyboardEvent) => if (e.keyCode == KeyCode.Enter) update()
-    inputBox.size = 200
+    inputBox.size = 150
 
     update()
 

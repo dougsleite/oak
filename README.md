@@ -11,3 +11,6 @@
 
 **Run tests**
 * sbt test
+
+**CSS reference**
+* https://github.com/daneden/animate.css#Basic-Usage
