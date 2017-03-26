@@ -24,13 +24,17 @@ private object MongoService {
   val MONGO_CLI: MongoClient = MongoClient("mongodb://localhost")
   val MONGO_DB: MongoDatabase = MONGO_CLI.getDatabase("vm")
   val MONGO_COLLECTION: MongoCollection[Document] = MONGO_DB.getCollection("letters")
+
+  val JSON_SETTINGS = new JsonWriterSettings(JsonMode.STRICT, true)
 }
 
 class MongoService(mongoQueryParser: MongoQueryParser) {
 
   def executeQuery(query: String): Seq[String] = Try {
-    val result2: Future[Seq[Document]] = MongoService.MONGO_COLLECTION.find(mongoQueryParser.parse(query)).toFuture()
-    Await.result(result2, atMost = MongoService.TIMEOUT).map(doc => doc.toJson(new JsonWriterSettings(JsonMode.STRICT, true))).toList
+    val result: Future[Seq[Document]] = MongoService.MONGO_COLLECTION.find(mongoQueryParser.parse(query)).toFuture()
+    Await.result(result, atMost = MongoService.TIMEOUT)
+      .map(doc => doc.toJson(MongoService.JSON_SETTINGS))
+      .toList
   } match {
     case Success(value) => value
     case Failure(f) => List()
